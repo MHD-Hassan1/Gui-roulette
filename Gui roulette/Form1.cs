@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Windows.Forms;
-
+﻿
 namespace Gui_roulette
 {
     public partial class Form1 : Form
@@ -48,19 +44,19 @@ namespace Gui_roulette
             // 1. Validera insats
             if (string.IsNullOrWhiteSpace(betamount.Text))
             {
-                resultat.Text = "❌ Ange insatsbelopp!";
+                resultat.Text = " Ange insatsbelopp!";
                 return;
             }
 
             if (!decimal.TryParse(betamount.Text, out decimal betAmount) || betAmount <= 0)
             {
-                resultat.Text = "❌ Ogiltig insats!";
+                resultat.Text = " Ogiltig insats!";
                 return;
             }
 
             if (betAmount > playerBalance)
             {
-                resultat.Text = $"❌ Du har bara ${playerBalance} kvar!";
+                resultat.Text = $" Du har bara ${playerBalance} kvar!";
                 return;
             }
 
@@ -72,41 +68,41 @@ namespace Gui_roulette
             {
                 if (!int.TryParse(nrbtn.Text, out selectedNumber) || selectedNumber < 0 || selectedNumber > 36)
                 {
-                    resultat.Text = "❌ Ogiltigt nummer (0-36)!";
+                    resultat.Text = " Ogiltigt nummer (0-36)!";
                     return;
                 }
             }
 
-            // 3. Validera kombination OM både bettyp och nummer är valda
+            // 3. Validera kombination om både bettyp och nummer är valda
             if (!string.IsNullOrEmpty(selectedBetType) && hasNumber)
             {
                 if (selectedNumber == 0)
                 {
-                    resultat.Text = "❌ 0 är GRÖNT! Kan ej kombineras med Rött/Svart/Jämnt/Udda.";
+                    resultat.Text = " 0 är GRÖNT! Kan ej kombineras med Rött/Svart/Jämnt/Udda.";
                     return;
                 }
 
                 if (selectedBetType == "Red" && !redNumbers.Contains(selectedNumber))
                 {
-                    resultat.Text = $"❌ {selectedNumber} är SVART, inte rött!";
+                    resultat.Text = $" {selectedNumber} är SVART, inte rött!";
                     return;
                 }
 
                 if (selectedBetType == "Black" && redNumbers.Contains(selectedNumber))
                 {
-                    resultat.Text = $"❌ {selectedNumber} är RÖTT, inte svart!";
+                    resultat.Text = $" {selectedNumber} är RÖTT, inte svart!";
                     return;
                 }
 
                 if (selectedBetType == "Even" && selectedNumber % 2 != 0)
                 {
-                    resultat.Text = $"❌ {selectedNumber} är UDDA, inte jämnt!";
+                    resultat.Text = $" {selectedNumber} är UDDA, inte jämnt!";
                     return;
                 }
 
                 if (selectedBetType == "Odd" && selectedNumber % 2 == 0)
                 {
-                    resultat.Text = $"❌ {selectedNumber} är JÄMNT, inte udda!";
+                    resultat.Text = $" {selectedNumber} är JÄMNT, inte udda!";
                     return;
                 }
             }
@@ -116,11 +112,11 @@ namespace Gui_roulette
             string resultColor = GetColor(resultNumber);
             bool isEven = (resultNumber != 0 && resultNumber % 2 == 0);
 
-            // 5. Beräkna vinst/förlust - ENLIGT DINA REGLER:
+            // 5. Beräkna vinst/förlust
             bool win = false;
             decimal payout = 0;
 
-            // FALL 1: Satsa ENBART på nummer (ingen färg/typ vald)
+            // FALL 1: Satsa enbart på nummer (ingen färg/typ vald)
             if (string.IsNullOrEmpty(selectedBetType) && hasNumber)
             {
                 if (resultNumber == selectedNumber)
@@ -172,7 +168,7 @@ namespace Gui_roulette
                 }
                 // Annars förlust
             }
-            // FALL 3: Satsa ENBART på färg/typ (inget nummer)
+            // FALL 3: Satsa enbart på färg/typ (inget nummer)
             else if (!string.IsNullOrEmpty(selectedBetType) && !hasNumber)
             {
                 if (resultNumber == 0)
@@ -205,7 +201,7 @@ namespace Gui_roulette
             // FALL 4: Ingen satsning gjord
             else
             {
-                resultat.Text = "❌ Välj antingen en färg/typ ELLER ett nummer att satsa på!";
+                resultat.Text = " Välj antingen en färg/typ ELLER ett nummer att satsa på!";
                 return;
             }
 
@@ -213,12 +209,12 @@ namespace Gui_roulette
             if (win)
             {
                 playerBalance += payout - betAmount;
-                resultat.Text = $"🎉 VINST! +${payout} | Resultat: {resultNumber} ({resultColor})";
+                resultat.Text = $" VINST! +${payout} | Resultat: {resultNumber} ({resultColor})";
             }
             else
             {
                 playerBalance -= betAmount;
-                resultat.Text = $"❌ FÖRLUST -${betAmount} | Resultat: {resultNumber} ({resultColor})" +
+                resultat.Text = $" FÖRLUST -${betAmount} | Resultat: {resultNumber} ({resultColor})" +
                                (resultNumber == 0 ? " - 0 är GRÖNT!" : "");
             }
 
@@ -229,7 +225,7 @@ namespace Gui_roulette
             // 7. Game over?
             if (playerBalance <= 0)
             {
-                resultat.Text = "💰 GAME OVER! Tryck på Reset för att börja om.";
+                resultat.Text = " GAME OVER! Tryck på Reset för att börja om.";
             }
         }
 
@@ -239,7 +235,7 @@ namespace Gui_roulette
             selectedBetType = null;
             betamount.Text = "";
             nrbtn.Text = "";
-            resultat.Text = "✨ Spelet återställt - du har $100 att spela med!";
+            resultat.Text = " Spelet återställt - du har $100 att spela med!";
             UpdateBalanceDisplay();
             UpdateButtonColors();
         }
